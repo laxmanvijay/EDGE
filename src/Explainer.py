@@ -21,6 +21,7 @@ from src.gnn_model.dataset import RDFDatasets
 from src.gnn_model.GAT import RGAT
 from src.gnn_model.hetero_features import HeteroFeature
 from src.gnn_model.RGCN import RGCN
+from src.gnn_model.grit import GritTransformer
 from src.gnn_model.utils import (calculate_metrics, gen_evaluations,
                                  get_lp_aifb_fid, get_lp_bgs_fid,
                                  get_lp_mutag_fid, get_nodes_dict)
@@ -139,6 +140,12 @@ class Explainer:
                 self.e_types,
                 num_heads=3,
                 num_hidden_layers=self.hidden_layers,
+            ).to(self.device)
+        
+        if self.model_name == "GRIT":
+            self.model = GritTransformer(
+                self.hidden_dim,
+                self.out_dim
             ).to(self.device)
         self.optimizer = th.optim.Adam(
             self.model.parameters(), lr=self.lr, weight_decay=self.weight_decay
